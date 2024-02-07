@@ -21,7 +21,7 @@ func registerNewUser(context *gin.Context) {
 	id, err := user.Save()
 
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to register the new user"})
+		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -47,14 +47,14 @@ func loginUser(context *gin.Context) {
 		return
 	}
 	
-	token, err := utils.GenerateToken(user.Email, user.ID)
+	token, expiratiion_time, err := utils.GenerateToken(user.Email, user.ID)
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"token": token})
+	context.JSON(http.StatusOK, gin.H{"token": token, "exp": expiratiion_time})
 
 
 }

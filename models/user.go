@@ -14,6 +14,18 @@ type User struct {
 }
 
 func (u *User) Save() (int64, error) {
+	checkQuery := "SELECT email FROM users WHERE email=?"
+
+	row := db.DB.QueryRow(checkQuery, u.Email)
+
+	var retriviedEmail string
+
+	row.Scan(&retriviedEmail)
+
+	if retriviedEmail != "" {
+		return 0, errors.New("email already used")
+	}
+
 	query := `
 	INSERT INTO users (email, password)
 	VALUES (?, ?)
@@ -24,6 +36,8 @@ func (u *User) Save() (int64, error) {
 	if err != nil {
 		return 0, err
 	}
+
+	defer stmt.Close()
 
 	hashedPassword, err := utils.HashPassword(u.Password)
 

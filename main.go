@@ -13,7 +13,8 @@ func main() {
 	server := gin.Default()
 	corsConfig := cors.New(cors.Options{
 		AllowedOrigins: []string{"http://localhost:4200"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"}, // Headers you want to allow
 		AllowCredentials: true,
 	})
 	server.Use(func(c *gin.Context) {
